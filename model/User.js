@@ -1,5 +1,8 @@
 const validator = require('validator');
 const Mongoose = require("mongoose");
+
+const Pet = require('./petModel').schema
+
 const UserSchema = new Mongoose.Schema({
     username: {
         type: String,
@@ -22,7 +25,7 @@ const UserSchema = new Mongoose.Schema({
         default: "Basic",
         required: true,
     },
-    pets: []
+    pets: [ Pet ]
 });
 
 const User = Mongoose.model("user", UserSchema);

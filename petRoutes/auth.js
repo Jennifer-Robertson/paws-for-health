@@ -7,11 +7,8 @@ exports.addPet = async(req, res, next) => {
     const petName = req.body.name;
     const petAge = req.body.age;
     const petSpecies = req.body.species;
-    const currentUsername = req.body.username;
-    console.log(currentUsername)
-    console.log(req.body, petName, petAge, petSpecies)
-
-
+    const currentUsername = req.user;
+  
     User.findOne({"username": currentUsername})
     .then(doc => {
         let original = true;
@@ -42,16 +39,30 @@ exports.addPet = async(req, res, next) => {
         })
     }
     
-//     , function (err, record) {
-//         if(err) res.status(401).json({message: "Pet creation not successful", error: err.message})
-//         console.log("this is the record", record)
-        
-//         record.pets.push({
-//             petName,
-//             petAge,
-//             petSpecies
-//         })
-//         record.save()
-//         res.status(201).json({message: "pet created"})
-//     })
-// }
+    exports.getPets = async(req, res, next) => {
+        const currentUsername = req.user;
+
+        User.findOne({"username": currentUsername})
+        .then(doc => {
+            const pets = doc.pets.map(pet => pet['petName'])
+            res.status(200).json({petNames: pets})
+        })
+        .catch((err) => {
+            res.status(401).json({
+                message: "no pets in DB",
+                error: err.message
+        })
+
+    })
+}
+
+exports.petMetrics = async (req, res, next) => {
+    const {name, date, weight, appetite, mood, water, urine, stool, stoolConsistency, vomit} = req.body;
+    console.log(date, weight, appetite)
+    const currentUsername = req.user
+    console.log(currentUsername)
+    User.findOne({"username": currentUsername})
+        .then(doc => {
+            console.log(doc.pets.filter(pet => pet.petName === name ))
+        })
+}

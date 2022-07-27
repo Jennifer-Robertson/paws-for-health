@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const petInfoSchema = new Schema({
+    name: {},
     weight: {
         type: Number,
         default: "none"

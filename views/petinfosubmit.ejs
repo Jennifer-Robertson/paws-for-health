@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <nav>
+        <div>
+            <button class="logout"> <a href="/logout">Log Out</a></button>
+            <button class="addPetPage"> <a href="/petspage">Pet Selection</a></button>
+        </div>
+    </nav>
+    <form method="POST" type="text" action="/api/pets/petMetrics">
+        <input type="text" value="Gin" id="petname" readonly>
+        <label>Date(required):</label>
+        <input type="date" required="true" id="date">
+        <div class="daily-function">
+            <label>Weight: </label>
+            <input name="weight"type="number" id="weight">
+            <label>Appetite: </label>
+            <input name="appetite"type="number" max="10" id="appetite">
+            <label>Mood: </label>
+            <input name="mood"type="number" id="mood">
+            <label>Water intake: </label>
+            <input name="water"type="number" id="water">
+            <label>Times pet passed urine: </label>
+            <input name="urine"type="number" id="urine">
+            <label>Times pet passed stool: </label>
+            <input name="stool"type="number" id="stool">
+            <label>Stool consistency: </label>
+            <input name="stoolConsistency"type="number" id="stoolConsistency">
+            <label>Times vomited: </label>
+            <input name="vomit"type="number" id="vomit">
+            <button type="submit">CLICK</button>
+        </div>
+        <script>
+            const form = document.querySelector('form')
+            const name = document.querySelector('#petname')
+            const date = document.querySelector('#date')
+            const weight = document.querySelector('#weight')
+            const appetite = document.querySelector('#appetite')
+            const mood = document.querySelector('#mood')
+            const water = document.querySelector('#water')
+            const urine = document.querySelector('#urine')
+            const stool = document.querySelector('#stool')
+            const stoolConsistency = document.querySelector('#stoolConsistency')
+            const vomit = document.querySelector('#vomit')
+            const display = document.querySelector('.error')
+             form.addEventListener('submit', async (e) => {
+                e.preventDefault()
+                  try {
+                  const res = await fetch('/api/pets/petMetrics', {
+                    method: 'POST',
+                    body: JSON.stringify({ 
+                        name: name.value.toLowerCase(),
+                        date: date.value,
+                        weight: weight.value, 
+                        appetite: appetite.value, 
+                        mood: mood.value, 
+                        water: water.value, 
+                        urine: urine.value, 
+                        stool: stool.value, 
+                        stoolConsistency: stoolConsistency.value, 
+                        vomit: vomit.value, 
+                        username: localStorage.getItem("currentUsername") }),
+                    headers: { 'Content-Type': 'application/json' }
+                  })
+                  const data = await res.json()
+
+                  if(res.status === 400 || res.status === 401){
+                   return display.textContent = `${data.message}. ${data.error ? data.error : ''}`
+                  }
+                location.assign('/petinfosubmit')
+                } catch (err) {
+                  console.log(err.message)
+                }
+              })
+          </script>
+
+
+        <!-- What to track:
+-day
+-weight
+-appetite
+-water intake
+-stool (+consistency, scale)
+-urine
+-comfort?/attutide?/energy?
+-vomiting(+type/amount?) -->
+
+
+    </form>
+</body>
+</html>

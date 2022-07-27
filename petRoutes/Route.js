@@ -1,8 +1,9 @@
 const express = require("express")
 const router = express.Router()
-const { addPet } = require("./auth");
-const {adminAuth} = require("../middleware/auth");
+const { addPet, getPets, petMetrics  } = require("./auth");
+const {userAuth} = require("../middleware/auth");
 
-router.route("/addPet").post(addPet); 
-
+router.route("/addPet").post(userAuth, addPet); 
+router.route("/getPets").get(userAuth, getPets);
+router.route("/petMetrics").post(userAuth, petMetrics);
 module.exports = router;

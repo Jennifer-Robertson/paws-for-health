@@ -118,7 +118,6 @@ exports.update = async (req, res, next) => {
         role,
         id
     } = req.body;
-    console.log(req.body)
     if (role && id) {
         if (role === "Admin") {
             await User.findById(id)

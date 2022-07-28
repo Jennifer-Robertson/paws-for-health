@@ -113,66 +113,6 @@ exports.login = async (req, res, next) => {
 
 }
 
-exports.update = async (req, res, next) => {
-    const {
-        role,
-        id
-    } = req.body;
-    if (role && id) {
-        if (role === "Admin") {
-            await User.findById(id)
-                .then((user) => {
-                    user.role === "Basic" ? user.role = role : user.role = "Basic"
-                    user.save((err) => {
-                        if (err) {
-                            res.status(400).json({
-                                message: "Error has occured",
-                                error: err.message
-                            });
-                            process.exit(1)
-                        }
-                        res.status(201).json({
-                            message: "Update successful",
-                            user
-                        });
-                    });
-                })
-                .catch((error) => {
-                    res.status(400).json({
-                        message: "an error happened",
-                        error: error.message
-                    });
-                });
-        } else {
-            res.status(400).json({
-                message: "Role is not admin"
-            });
-        }
-    } else {
-        res.status(400).json({
-            message: "Role or ID is missing"
-        });
-    }
-}
-
-exports.deleteUser = async (req, res, next) => {
-    const {
-        id
-    } = req.body;
-
-    await User.findByIdAndDelete(id)
-        .then(user => {
-            res.status(201).json({
-                message: "user deleted",
-                user
-            })
-        })
-        .catch(error => res.status(400).json({
-            message: "an error occured",
-            error: error.message
-        }))
-}
-
 exports.getUsers = async (req, res, next) => {
     //this will return all users in the DB
     await User.find({})

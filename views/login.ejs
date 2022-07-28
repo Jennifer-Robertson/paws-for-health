@@ -25,7 +25,7 @@
     const password = document.querySelector('#password')
     const display = document.querySelector('.error')
    form.addEventListener('submit', async (e) => {
-      e.preventDefault()
+    localStorage.setItem("currentUsername", username.value.toLowerCase());
       display.textContent = ''
       try {
         const res = await fetch('/api/auth/login', {
@@ -35,12 +35,9 @@
         })
         const data = await res.json()
           if (res.status === 400 || res.status === 401) {
+            console.log(res)
           return display.textContent = `${data.message}. ${data.error ? data.error : ''}`
         }
-        console.log(data)
-        // data.role === "Admin" ? location.assign('/admin') : location.assign('/petspage')
-        localStorage.setItem("currentUsername", username.value.toLowerCase());
-        location.assign('/petspage')
       } catch (err) {
         console.log(err.message)
       }

@@ -3,14 +3,16 @@
 
 const User = require('../model/User')
 
+//adds a new pet to the db, subdocument of the username field
 exports.addPet = async(req, res, next) => {
     const petName = req.body.name;
     const petAge = req.body.age;
     const petSpecies = req.body.species;
     const currentUsername = req.user;
-  
+  //finds the current user in the db
     User.findOne({"username": currentUsername})
     .then(doc => {
+        //checks to see if the pet is already in the db
         let original = true;
         for(let i = 0; i < doc.pets.length; i++){
             if(doc.pets[i].petName === petName){
@@ -19,6 +21,7 @@ exports.addPet = async(req, res, next) => {
 
             }
         }
+        //if the pet does not already exist, it will add it
         if(original) {
             doc.pets.push({
                 petName,
@@ -56,24 +59,45 @@ exports.addPet = async(req, res, next) => {
     })
 }
 
+//puts data from client side metrics form(petinfosubmit) into db
 exports.petMetrics = async (req, res, next) => {
     const {name, date, weight, appetite, mood, water, urine, stool, stoolConsistency, vomit} = req.body;
-    const currentUsername = req.user
-    console.log(currentUsername)
+    const currentUsername = req.user;
+    let petData = {
+        date,
+        weight,
+        appetite,
+        mood,
+        water,
+        urine,
+        stool,
+        stoolConsistency,
+        vomit
+    }
+//finds the current user in the DB
     User.findOne({"username": currentUsername})
         .then(doc => {
+            //filters to find the pet by name from the button that was clicked client side
             const pet = doc.pets.filter(pet => pet.petName === name)[0]
-            pet.healthMetrics.push({
-                date,
-                weight,
-                appetite,
-                mood,
-                water,
-                urine,
-                stool,
-                stoolConsistency,
-                vomit
-            })
-            doc.save(); 
+            let original = true;
+            //loops through data, if a date is already there, it will replace the data
+            for(let i = 0; i < pet.healthMetrics.length; i++){
+                if(pet.healthMetrics[i].date == date){
+                    pet.healthMetrics[i] = petData
+                    original = false;
+                }
+            }
+            //if it's a new entry, it will add it to the collection
+            if(original){
+                pet.healthMetrics.push(petData)
+            }
+            doc.save();           
+          
+        })            
+        .catch((err) => {
+            res.status(401).json({
+                message: "Pet data entry not successful",
+                error: err.message
         })
+    })
 }

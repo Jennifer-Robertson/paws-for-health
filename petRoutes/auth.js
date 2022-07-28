@@ -58,11 +58,22 @@ exports.addPet = async(req, res, next) => {
 
 exports.petMetrics = async (req, res, next) => {
     const {name, date, weight, appetite, mood, water, urine, stool, stoolConsistency, vomit} = req.body;
-    console.log(date, weight, appetite)
     const currentUsername = req.user
     console.log(currentUsername)
     User.findOne({"username": currentUsername})
         .then(doc => {
-            console.log(doc.pets.filter(pet => pet.petName === name ))
+            const pet = doc.pets.filter(pet => pet.petName === name)[0]
+            pet.healthMetrics.push({
+                date,
+                weight,
+                appetite,
+                mood,
+                water,
+                urine,
+                stool,
+                stoolConsistency,
+                vomit
+            })
+            doc.save(); 
         })
 }

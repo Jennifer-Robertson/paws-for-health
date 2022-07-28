@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
+const healthMetrics = require('./petInfoModel').schema
 const petModelSchema = new Schema({
     petName: {
         type: String,
@@ -14,6 +14,7 @@ const petModelSchema = new Schema({
         type: String,
         required: true
     },
+    healthMetrics: [healthMetrics]
 })
 
 const Pet = mongoose.model("Pet", petModelSchema);

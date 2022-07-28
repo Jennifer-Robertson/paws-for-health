@@ -13,8 +13,8 @@
             <button class="addPetPage"> <a href="/petspage">Pet Selection</a></button>
         </div>
     </nav>
-    <form method="POST" type="text" action="/api/pets/petMetrics">
-        <input type="text" value="Gin" id="petname" readonly>
+    <h2 class="petNameForPage">"Go back to pet selection and choose a pet</h2>
+    <form method="POST" type="text" action="">
         <label>Date(required):</label>
         <input type="date" required="true" id="date">
         <div class="daily-function">
@@ -38,7 +38,8 @@
         </div>
         <script>
             const form = document.querySelector('form')
-            const name = document.querySelector('#petname')
+            const name = localStorage.getItem('currentPetName')
+            document.querySelector('.petNameForPage').innerText = name[0].toUpperCase()+name.slice(1)
             const date = document.querySelector('#date')
             const weight = document.querySelector('#weight')
             const appetite = document.querySelector('#appetite')
@@ -55,7 +56,7 @@
                   const res = await fetch('/api/pets/petMetrics', {
                     method: 'POST',
                     body: JSON.stringify({ 
-                        name: name.value.toLowerCase(),
+                        name: name,
                         date: date.value,
                         weight: weight.value, 
                         appetite: appetite.value, 

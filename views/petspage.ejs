@@ -43,7 +43,6 @@
               name: petName.value.toLowerCase(),
               age: petAge.value,
               species: petSpecies.value.toLowerCase(),
-              username: localStorage.getItem("currentUsername")
             }),
             headers: {
               'Content-Type': 'application/json'
@@ -67,20 +66,33 @@
         try {
           const res = await fetch('/api/pets/getPets')
           const data = await res.json()
-          console.log(data)
-          if (!data) return
+           if (!data) return
           else {
-            data.petNames.map((mappedUser) => {
-              console.log(mappedUser)
-              let a = `<a href='/petinfosubmit'> ${mappedUser} </a>`
-              btnContainer.innerHTML += a
+            data.petNames.map((mappedPet) => {
+              let btn = document.createElement("a")
+              btn.href = '/petinfosubmit'
+              btn.appendChild(document.createTextNode(mappedPet))
+              btn.addEventListener('click', (e) => 
+              localStorage.setItem('currentPetName', e.target.innerText))
+              btnContainer.appendChild(btn)
             })
           }
         } catch (err) {
           console.log(err.message)
         }
+        console.log()
+        Array.from(document.querySelectorAll(".petNameBtns")).forEach(button => {
+          console.log(button)
+        button.addEventListener('click', () => {
+          console.log('hi')
+          localStorage.setItem('currentPetName', this.innerText)
+          location.assign('/petinfosubmit')
+        })
+      })
       }
       getPets()
+
+      
     </script>
 </body>
 

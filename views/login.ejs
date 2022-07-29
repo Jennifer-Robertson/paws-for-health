@@ -25,7 +25,7 @@
     const password = document.querySelector('#password')
     const display = document.querySelector('.error')
    form.addEventListener('submit', async (e) => {
-    localStorage.setItem("currentUsername", username.value.toLowerCase());
+      e.preventDefault()
       display.textContent = ''
       try {
         const res = await fetch('/api/auth/login', {
@@ -38,6 +38,8 @@
             console.log(res)
           return display.textContent = `${data.message}. ${data.error ? data.error : ''}`
         }
+        localStorage.setItem("currentUsername", username.value.toLowerCase());
+        location.assign('/petspage')
       } catch (err) {
         console.log(err.message)
       }

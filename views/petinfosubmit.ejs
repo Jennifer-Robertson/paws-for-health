@@ -14,7 +14,9 @@
         </div>
     </nav>
     <h2 class="petNameForPage">"Go back to pet selection and choose a pet</h2>
-    <form method="POST" type="text" action="">
+    <h3>Log pet metrics</h3>
+    <h4>Relogging a duplicate day will overwrite the prior log</h4>
+    <form method="" type="text" action="">
         <label>Date(required):</label>
         <input type="date" required="true" id="date">
         <div class="daily-function">
@@ -36,6 +38,13 @@
             <input name="vomit"type="number" id="vomit">
             <button type="submit">CLICK</button>
         </div>
+        </form>
+        <h2>Logged dates</h2>
+        <div>
+            <ul class="dateList">
+
+            </ul>
+        </div>
         <script>
             const form = document.querySelector('form')
             const name = localStorage.getItem('currentPetName')
@@ -51,7 +60,6 @@
             const vomit = document.querySelector('#vomit')
             const display = document.querySelector('.error')
              form.addEventListener('submit', async (e) => {
-                e.preventDefault()
                   try {
                   const res = await fetch('/api/pets/petMetrics', {
                     method: 'POST',
@@ -65,8 +73,7 @@
                         urine: urine.value, 
                         stool: stool.value, 
                         stoolConsistency: stoolConsistency.value, 
-                        vomit: vomit.value, 
-                        username: localStorage.getItem("currentUsername") }),
+                        vomit: vomit.value}),
                     headers: { 'Content-Type': 'application/json' }
                   })
                   const data = await res.json()
@@ -74,24 +81,55 @@
                   if(res.status === 400 || res.status === 401){
                    return display.textContent = `${data.message}. ${data.error ? data.error : ''}`
                   }
-                location.assign('/petinfosubmit')
                 } catch (err) {
                   console.log(err.message)
                 }
               })
+
+
+              const getLoggedDates = async () => {
+        const dateList = document.querySelector(".dateList")
+
+        try {
+            const res = await fetch(`/api/pets/getLoggedDates/${name}`)
+        const data = await res.json()
+        console.log(data)
+           if (!data) return
+          else {
+            console.log(data)
+            data.map((date) => {
+              let li = document.createElement("li")
+              let btn = document.createElement("button")
+              li.appendChild(document.createTextNode(date))
+              btn.appendChild(document.createTextNode('Delete'))
+              btn.addEventListener('click', (e) => {
+                const date = e.target.parentNode.innerText.slice(0, -6);
+                deleteMetric(date)
+              })
+              li.appendChild(btn)
+              dateList.appendChild(li)
+            })
+        }
+            }catch (err) {
+                  console.log(err.message)
+                }
+            }
+
+            async function deleteMetric(date) {
+                const name = localStorage.getItem('currentPetName')
+                try {
+                  const res = await fetch('/api/pets/deleteMetric', {
+                    method: 'POST',
+                    body: JSON.stringify({ date: date, name: name }),
+                    headers: { 'Content-Type': 'application/json' }
+                  })
+            } catch (err) {
+                  console.log(err.message)
+                }
+                document.location.reload()
+            }
+      getLoggedDates()
           </script>
-
-
-        <!-- What to track:
--day
--weight
--appetite
--water intake
--stool (+consistency, scale)
--urine
--comfort?/attutide?/energy?
--vomiting(+type/amount?) -->
-
 
     </form>
 </body>

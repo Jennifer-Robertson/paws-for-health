@@ -25,8 +25,7 @@ app.get('/logout', (req, res) => {
     res.cookie('jwt', '', {maxAge: '1'})//clears the token and expires it
     res.redirect('/') //redirects to home page
 })
-// app.get("/admin", adminAuth, (req, res) => res.render("admin"));
-// app.get("/basic", userAuth, (req, res) => res.render("user"));
+
 app.get("/petspage", userAuth, (req, res) => res.render("petspage"));
 app.get("/petinfosubmit", userAuth, (req,res) => res.render("petinfosubmit"));
 

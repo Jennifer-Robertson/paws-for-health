@@ -126,7 +126,7 @@ exports.petMetrics = async (req, res, next) => {
         })
 }
 
-exports.getLoggedDates = async (req, res, next) => {
+exports.getLoggedMetrics = async (req, res, next) => {
     const name = req.params.name;
     const currentUsername = req.user;
     //finds the current user in the DB
@@ -135,8 +135,7 @@ exports.getLoggedDates = async (req, res, next) => {
         })
         .then(doc => {
             const pet = doc.pets.filter(pet => pet.petName === name)[0]
-            const loggedDates = pet.healthMetrics.map(pet => pet.date)
-            res.json(loggedDates)
+            res.json(pet)
 
         })
         .catch((err) => {

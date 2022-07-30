@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+</head>
+
+<body>
+    <div>
+        <button class="logout"> <a href="/logout">Log Out</a></button>
+        <button class="addPetPage"> <a href="/petspage">Pet Selection</a></button>
+    </div>
+    <h1>Get Metrics</h1>
+    <div class="petNameBtns">
+        <form>
+            <select name="petNames" id="petNames">
+            </select>
+            <select name="metrics" id="metrics">
+                <option value="weight" class="metricsOpt">Weight</option>
+                <option value="appetite" class="metricsOpt">Appetite</option>
+                <option value="mood" class="metricsOpt">Mood</option>
+                <option value="water" class="metricsOpt">Water intake</option>
+                <option value="urine" class="metricsOpt">Times peed</option>
+                <option value="stool" class="metricsOpt">Times passed stool</option>
+                <option value="stoolConsistency" class="metricsOpt">Stool consistency</option>
+                <option value="vomit" class="metricsOpt">Times vomited</option>
+                <button type="submit" class="submitBtn">Click!</button>
+            </select>
+        </form>
+
+    </div>
+
+
+    <script>
+        //gets the pets name once selected from the dropdown
+        const select = document.querySelector('#petNames')
+        select.addEventListener('change', (e) => {
+            const name = e.target.value
+            getPetMetrics(name)
+        })
+        const getPets = async () => {
+            const dropdown = document.querySelector("#petNames")
+            try {
+                const res = await fetch('/api/pets/getPets')
+                const data = await res.json()
+                if (!data) return
+                else {
+                    data.petNames.forEach((mappedPet) => {
+                        let opt = document.createElement("option")
+                        opt.appendChild(document.createTextNode(mappedPet))
+                        opt.value = mappedPet
+
+                        dropdown.appendChild(opt)
+                    })
+                }
+            } catch (err) {
+                console.log(err.message)
+            }
+        }
+        //gets pet metrics from db using pets name
+        const getPetMetrics = async (petName) => {
+                    try {
+                        const res = await fetch(`/api/pets/getLoggedMetrics/${petName}`)
+                        const data = await res.json()
+                        if (!data) return
+                        else {
+                            console.log(data)
+                            const sortedByDate = data.healthMetrics.sort((a, b) => {
+                                    if (a.date < b.date) {
+                                        return -1;
+                                    } else if (a.date > b.date) {
+                                        return 1;
+                                    } else {
+                                        return 0;
+                                    }
+                                    }) 
+                                    console.log(sortedByDate)
+                            }
+                        } catch (err) {
+                            console.log(err.message)
+                        }
+                    }
+
+
+                    getPets()
+    </script>
+</body>
+
+</html>

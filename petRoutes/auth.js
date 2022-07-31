@@ -135,7 +135,19 @@ exports.getLoggedMetrics = async (req, res, next) => {
         })
         .then(doc => {
             const pet = doc.pets.filter(pet => pet.petName === name)[0]
-            res.json(pet)
+            const healthMetrics = pet.healthMetrics.sort((a, b) => {
+                if (a.date < b.date) {
+                    return -1;
+                } else if (a.date > b.date) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+                }) 
+
+
+//returns both the full data with pet info, and health metrics sorted by date
+            res.json({pet: pet, healthMetrics: healthMetrics})
 
         })
         .catch((err) => {

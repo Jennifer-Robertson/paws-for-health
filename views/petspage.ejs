@@ -12,6 +12,7 @@
   <nav>
     <div>
       <button class="logout"> <a href="/logout">Log Out</a></button>
+      <button class="getmetrics"> <a href="/getmetrics">View Graphs</a></button>
     </div>
   </nav>
   <h2>Choose a pet</h2>
@@ -40,7 +41,7 @@
           const res = await fetch('/api/pets/addPet', {
             method: 'POST',
             body: JSON.stringify({
-              name: petName.value.toLowerCase(),
+              name: petName.value,
               age: petAge.value,
               species: petSpecies.value.toLowerCase(),
             }),

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Metrics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.2/dist/chart.min.js"></script>
+</head>
+
+<body>
+    <div>
+        <button class="logout"> <a href="/logout">Log Out</a></button>
+        <button class="addPetPage"> <a href="/petspage">Pet Selection</a></button>
+    </div>
+    <h1>Get Metrics</h1>
+    <h2 class="error"></h2>
+    <div class="petNameBtns">
+        <form>
+            <select name="petNames" id="petNames">
+                <option>Select a pet</option>
+            </select>
+        </form>
+
+    </div>
+
+    <div class="canvasContainer">
+    </div>
+
+    <script>
+        //gets the pets name once selected from the dropdown
+        const select = document.querySelector('#petNames')
+        select.addEventListener('change', (e) => {
+            const name = e.target.value
+            getPetMetrics(name)
+        })
+        const getPets = async () => {
+            const dropdown = document.querySelector("#petNames")
+            try {
+                const res = await fetch('/api/pets/getPets')
+                const data = await res.json()
+                if (!data) return
+                else {
+                    data.petNames.forEach((mappedPet) => {
+                        let opt = document.createElement("option")
+                        opt.appendChild(document.createTextNode(mappedPet))
+                        opt.value = mappedPet
+
+                        dropdown.appendChild(opt)
+                    })
+                }
+            } catch (err) {
+                console.log(err.message)
+            }
+        }
+        //gets pet metrics from db using pets name
+        const getPetMetrics = async (petName) => {
+            try {
+                const res = await fetch(`/api/pets/getLoggedMetrics/${petName}`)
+                const data = await res.json()
+                if (!data) return
+                else {
+                    if (data.healthMetrics.length > 0) {
+                        document.querySelector('.error').innerText = ""
+                        makeGraphs(data)
+                    } else {
+                        clearChart()
+                        document.querySelector('.error').innerText =
+                            "No metrics available. Please add metrics for this pet."
+                    }
+
+                }
+            } catch (err) {
+                console.log(err.message)
+            }
+        }
+
+        const makeGraphs = async (data) => {
+            const labels = data.healthMetrics.map(metric => metric.date);
+            const graphData = [];
+            //creates shell data structures for each metric in graph format
+            Object.keys(data.healthMetrics[0]).forEach(metric => {
+                if (metric == "date" || metric == "_id") return
+                const dataCollection = {
+                    labels: labels,
+                    datasets: [{
+                        label: metric,
+                        data: [],
+                    }]
+                }
+                graphData.push(dataCollection)
+            })
+            //cycles through each set of health metrics
+            data.healthMetrics.forEach(collection => {
+                //takes each shell data structure and puts its corresponding metric values in
+                graphData.forEach(graph => {
+                    const pushValue = collection[graph.datasets[0].label]
+                    graph.datasets[0].data.push(pushValue)
+                })
+            })
+            //create a graph for each metric
+            const canvasDiv = document.querySelector('.canvasContainer')
+            graphData.forEach(graph => {
+                const label = graph.datasets[0].label
+                const canvas = document.createElement('canvas')
+                const chartId = 'chart' + label;
+                canvas.id = chartId
+                canvasDiv.appendChild(canvas)
+
+                const context = document.getElementById(chartId).getContext('2d')
+                const dataArray = graph.datasets[0].data
+                const data = {
+                    labels: labels,
+                    datasets: [{
+                        label: label,
+                        data: dataArray
+                    }]
+                }
+                const config = {
+                    type: 'line',
+                    data: data,
+                    options: {}
+                }
+
+                window[chartId] = new Chart(context, config);
+            })
+        }
+        //clears existing charts from window
+        function clearChart() {
+            const canvasDiv = document.querySelector('.canvasContainer')
+            //deletes previously existing graphs
+            while (canvasDiv.firstChild) {
+                canvasDiv.removeChild(canvasDiv.firstChild)
+            }
+        }
+
+        getPets()
+    </script>
+</body>
+
+</html>

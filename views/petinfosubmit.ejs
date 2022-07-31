@@ -11,6 +11,7 @@
         <div>
             <button class="logout"> <a href="/logout">Log Out</a></button>
             <button class="addPetPage"> <a href="/petspage">Pet Selection</a></button>
+            <button class="getmetrics"> <a href="/getmetrics">View Graphs</a></button>
         </div>
     </nav>
     <h2 class="petNameForPage">"Go back to pet selection and choose a pet</h2>
@@ -91,13 +92,13 @@
         const dateList = document.querySelector(".dateList")
 
         try {
-            const res = await fetch(`/api/pets/getLoggedDates/${name}`)
+            const res = await fetch(`/api/pets/getLoggedMetrics/${name}`)
         const data = await res.json()
         console.log(data)
            if (!data) return
           else {
-            console.log(data)
-            data.map((date) => {
+            const loggedDates = data.healthMetrics.map(pet => pet.date)
+            loggedDates.forEach((date) => {
               let li = document.createElement("li")
               let btn = document.createElement("button")
               li.appendChild(document.createTextNode(date))
@@ -126,6 +127,8 @@
             } catch (err) {
                   console.log(err.message)
                 }
+
+                //I CAN"T GET THE PAGE TO RELOAD AFTER SUBMISSION?? FIX PLS.
                 document.location.reload()
             }
       getLoggedDates()

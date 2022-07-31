@@ -28,6 +28,7 @@ app.get('/logout', (req, res) => {
 
 app.get("/petspage", userAuth, (req, res) => res.render("petspage"));
 app.get("/petinfosubmit", userAuth, (req,res) => res.render("petinfosubmit"));
+app.get("/getmetrics", userAuth, (req,res) => res.render("getmetrics"));
 
 const server = app.listen(PORT, () => console.log(`Server connected to port ${PORT}`));
 

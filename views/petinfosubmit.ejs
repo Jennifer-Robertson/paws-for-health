@@ -4,44 +4,67 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Activities Page</title>
+<link rel="stylesheet" href="css/style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Truculenta:opsz,wght@12..72,200;12..72,700&display=swap"
+  rel="stylesheet">
 </head>
 <body>
     <nav>
+      <div class="navContainer">
+        <p class="logo">Paws for Health</p>
         <div>
-            <button class="logout"> <a href="/logout">Log Out</a></button>
-            <button class="addPetPage"> <a href="/petspage">Pet Selection</a></button>
-            <button class="getmetrics"> <a href="/getmetrics">View Graphs</a></button>
+          <a class="addPetPage" href="/petspage">Pet Selection</a>
+          <a class="getmetrics" href="/getmetrics">View Graphs</a>
+          <a class="logout" href="/logout">Log Out</a>
         </div>
+      </div>
     </nav>
-    <h2 class="petNameForPage">"Go back to pet selection and choose a pet</h2>
-    <h3>Log pet metrics</h3>
-    <h4>Relogging a duplicate day will overwrite the prior log</h4>
-    <form method="" type="text" action="">
+    <header class="metricsCont">
+      <h2 class="petNameForPage">"Go back to pet selection and choose a pet</h2>
+      <section class="metricsSummaryCont">
+        <p>Use the form below to log your pet's daily activities. For activities without a concrete value (mood/appetite), use a number from 0-10 to quantify your pet's activity, with 5 being your pet's baseline activity.</p>
+        <p>For stool consistency, please refer to the <a href="https://en.wikipedia.org/wiki/Bristol_stool_scale">Bristol stool scale</a></p>
+        <p>The date is the only required field, all other activities are optional. You don't need to enter every activity.</p>
+        <p>Relogging a duplicate day will overwrite the prior submission for that date</p>
+      </section>
+    </header>
+    
+    <section class="metricsForm">
+      <form method="" type="text" action="">
         <label>Date(required):</label>
         <input type="date" required="true" id="date">
-        <div class="daily-function">
-            <label>Weight: </label>
+        <section class="dailyFunctionCont">
+          <section>
+            <label>Weight(lbs): </label>
             <input name="weight"type="number" id="weight">
-            <label>Appetite: </label>
-            <input name="appetite"type="number" max="10" id="appetite">
-            <label>Mood: </label>
+            <label>Mood(0-10): </label>
             <input name="mood"type="number" id="mood">
-            <label>Water intake: </label>
+            <label>Appetite(0-10): </label>
+            <input name="appetite"type="number" max="10" id="appetite">
+            <label>Times vomited: </label>
+            <input name="vomit"type="number" id="vomit">
+          </section>
+          <section>
+            <label>Water intake(ml): </label>
             <input name="water"type="number" id="water">
             <label>Times pet passed urine: </label>
             <input name="urine"type="number" id="urine">
             <label>Times pet passed stool: </label>
             <input name="stool"type="number" id="stool">
-            <label>Stool consistency: </label>
+            <label>Stool consistency(0-7): </label>
             <input name="stoolConsistency"type="number" id="stoolConsistency">
-            <label>Times vomited: </label>
-            <input name="vomit"type="number" id="vomit">
-            <button type="submit">CLICK</button>
-        </div>
+          </section>
+        </section>
+        <button class="submitBtn" type="submit">Submit</button>
         </form>
+    </section>
+    <div class="loggedDatesCont">
         <h2>Logged dates</h2>
-        <div>
+
             <ul class="dateList">
 
             </ul>
@@ -49,7 +72,7 @@
         <script>
             const form = document.querySelector('form')
             const name = localStorage.getItem('currentPetName')
-            document.querySelector('.petNameForPage').innerText = name[0].toUpperCase()+name.slice(1)
+            document.querySelector('.petNameForPage').innerText = `You're currently logging ${name}'s activities`
             const date = document.querySelector('#date')
             const weight = document.querySelector('#weight')
             const appetite = document.querySelector('#appetite')
@@ -101,6 +124,7 @@
             loggedDates.forEach((date) => {
               let li = document.createElement("li")
               let btn = document.createElement("button")
+              btn.classList.add("submitBtn")
               li.appendChild(document.createTextNode(date))
               btn.appendChild(document.createTextNode('Delete'))
               btn.addEventListener('click', (e) => {

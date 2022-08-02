@@ -5,19 +5,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login Page</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Truculenta:opsz,wght@12..72,200;12..72,700&display=swap"
+    rel="stylesheet">
 </head>
 
 <body>
-  <h1>Login Page</h1>
-  <form>
-    <div class="error" style="background-color: red;"></div><br>
-    <label for="username" >Username</label><br>
-    <input type="text" id="username" required/><br>
-    <label for="password">Password</label><br>
-    <input type="password" id="password" required><br>
-    <input type="submit" value="login"><br>
-    </form>
-  <a href="/register">Don't have an accout? Register</a>
+  <nav>
+    <div class="navContainer">
+      <p class="logo">Paws for Health</p>
+      <div>
+        <a href="/register"> Register</a>
+      </div>
+    </div>
+  </nav>
+  <section class="loginContainer">
+    <div class="dogImgCont">
+      <div class="loginFormCont">
+        <h1>Login</h1>
+        <form>
+          <div class="error" style="background-color: red;"></div><br>
+          <label for="username" >Username</label><br>
+          <input type="text" id="username" required/><br>
+          <label for="password">Password</label><br>
+          <input type="password" id="password" required><br>
+          <input class="submitBtn" type="submit" value="Login"><br>
+          </form>
+        <a href="/register">Don't have an accout? <br>Register here</a>
+      </div>
+    </div>
+
+  </section>
+  
 
   <script>
     const form = document.querySelector('form')
@@ -38,7 +59,6 @@
             console.log(res)
           return display.textContent = `${data.message}. ${data.error ? data.error : ''}`
         }
-        localStorage.setItem("currentUsername", username.value.toLowerCase());
         location.assign('/petspage')
       } catch (err) {
         console.log(err.message)

@@ -9,6 +9,7 @@ const cookieParser = require("cookie-parser");
 const {adminAuth, userAuth} = require('./middleware/auth');
 //ejs
 app.set("view engine", "ejs")
+app.use(express.static('public'))
 
 connectDB();
 app.use(cookieParser());

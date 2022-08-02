@@ -6,23 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Get Metrics</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.2/dist/chart.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Truculenta:opsz,wght@12..72,200;12..72,700&display=swap"
+      rel="stylesheet">
 </head>
 
 <body>
-    <div>
-        <button class="logout"> <a href="/logout">Log Out</a></button>
-        <button class="addPetPage"> <a href="/petspage">Pet Selection</a></button>
-    </div>
-    <h1>Get Metrics</h1>
-    <h2 class="error"></h2>
+    <nav>
+        <div class="navContainer">
+          <p class="logo">Paws for Health</p>
+          <div>
+            <a class="addPetPage" href="/petspage">Pet Selection</a>
+            <a class="logout" href="/logout">Log Out</a>
+          </div>
+        </div>
+      </nav>
+   <header class="metricsCont">
+    <h1>View your pets activities over time</h1>
     <div class="petNameBtns">
         <form>
             <select name="petNames" id="petNames">
                 <option>Select a pet</option>
             </select>
         </form>
-
     </div>
+    <h2 class="error"></h2>
+   </header>
+    
 
     <div class="canvasContainer">
     </div>
@@ -34,12 +46,17 @@
             const name = e.target.value
             getPetMetrics(name)
         })
+        //gets pet info from the DB
         const getPets = async () => {
             const dropdown = document.querySelector("#petNames")
             try {
                 const res = await fetch('/api/pets/getPets')
                 const data = await res.json()
-                if (!data) return
+                //checks if there are any pets in the DB
+                if (data.petNames.length==0){
+                    document.querySelector(".error").innerText = "You currently don't have any pets logged! Please return to the pet selection page and add a pet to get started."
+                    return
+                }
                 else {
                     data.petNames.forEach((mappedPet) => {
                         let opt = document.createElement("option")
@@ -101,25 +118,28 @@
             //create a graph for each metric
             const canvasDiv = document.querySelector('.canvasContainer')
             graphData.forEach(graph => {
-                const label = graph.datasets[0].label
+                const label = graph.datasets[0].label;
                 const canvas = document.createElement('canvas')
                 const chartId = 'chart' + label;
-                canvas.id = chartId
+                canvas.id = chartId;
+                canvas.style.width = "500px";
+                canvas.style.height = "400px";
                 canvasDiv.appendChild(canvas)
 
                 const context = document.getElementById(chartId).getContext('2d')
-                const dataArray = graph.datasets[0].data
+                const dataArray = graph.datasets[0].data;
                 const data = {
                     labels: labels,
                     datasets: [{
                         label: label,
-                        data: dataArray
+                        data: dataArray,
+                        borderColor: ["rgba(135, 165, 139,1)"],
                     }]
                 }
                 const config = {
                     type: 'line',
                     data: data,
-                    options: {}
+                    options: {responsive: false}
                 }
 
                 window[chartId] = new Chart(context, config);

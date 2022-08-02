@@ -16,8 +16,8 @@ app.use(cookieParser());
 app.use(express.json());
 //if the server receives a request to api/auth, it will then route the 
 //request to our middleware in auth/route
-app.use('/api/auth', require('./Auth/route'));
-app.use('/api/pets', require('./petRoutes/route'));
+app.use('/api/auth', require('./Auth/Route'));
+app.use('/api/pets', require('./petRoutes/Route'));
 
 app.get('/', (req, res) => res.render("home"));
 app.get('/register', (req, res) => res.render("register"));
@@ -31,7 +31,7 @@ app.get("/petspage", userAuth, (req, res) => res.render("petspage"));
 app.get("/petinfosubmit", userAuth, (req,res) => res.render("petinfosubmit"));
 app.get("/getmetrics", userAuth, (req,res) => res.render("getmetrics"));
 
-const server = app.listen(process.env.PORT || port, () => console.log(`Server connected to port ${PORT}`));
+const server = app.listen(process.env.PORT || port, () => console.log(`Server connected to port`));
 
 process.on('unhandledRejection', err => {
     console.log(`An error occured: ${err.message}`);

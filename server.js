@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PORT =  process.env.PORT || 8000;
+const port =  8000;
 //this variable lets you bring in the connection function from the db file
 const connectDB = require('./db');
 //used to validate user access via cookie token
@@ -31,7 +31,7 @@ app.get("/petspage", userAuth, (req, res) => res.render("petspage"));
 app.get("/petinfosubmit", userAuth, (req,res) => res.render("petinfosubmit"));
 app.get("/getmetrics", userAuth, (req,res) => res.render("getmetrics"));
 
-const server = app.listen(PORT, () => console.log(`Server connected to port ${PORT}`));
+const server = app.listen(process.env.PORT || port, () => console.log(`Server connected to port ${PORT}`));
 
 process.on('unhandledRejection', err => {
     console.log(`An error occured: ${err.message}`);

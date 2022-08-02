@@ -29,13 +29,12 @@ li {
     justify-content: center;
     gap: 2.3rem;
 }
+
 /* navbar */
 nav{
-    display: flex;
-    justify-content: space-between;
-    background: var(--dark-green);
     margin-bottom: 6rem;
 }
+
 nav a{
     color: #fff;
     font-weight: bold;
@@ -50,27 +49,15 @@ nav a:hover{
     font-family: 'Truculenta', sans-serif;
     font-weight: 700;
     font-size: 5rem;
-    text-align: center;
-    width: 50%;
-}
-.navContainer{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100px;
+    padding-left: 1rem;
+
+
 }
 
-.navContainer > div {
-    width: 20%;
-    display: flex;
-    gap: 30px;
+#navbarNav{
+    justify-content: flex-end;
 }
 
-.navContainer > p {
-    width: 90%;
-    padding-left: 20%;
-}
 /* homepage */
 .sophiaImg{
     max-width: 400px;
@@ -144,7 +131,7 @@ background: var(--light-green)
     background-color: rgba(255, 255, 255, 0.321);  
     backdrop-filter: blur(5px);
     padding: 2rem;
-    margin: 9rem 3rem;
+    margin: 5rem 3rem;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -182,6 +169,7 @@ add pet metrics */
 .dailyFunctionCont section {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 1rem;
 }
 
@@ -200,7 +188,9 @@ add pet metrics */
     gap: 1rem;
     margin: 1.5rem;
 }
-
+.dailyFunctionCont input {
+    width: 120px;
+ }
 .petNameForPage{
     text-align: center;
 }
@@ -238,3 +228,35 @@ add pet metrics */
     gap: 2rem;
 }
 
+/* registration */
+.registrationCont{
+    display: flex;
+    justify-content: center;
+}
+.registrationCont div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+@media screen and (max-width: 800px){
+    .containerHalf{
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .containerHalf > section{
+        align-items: center;
+        text-align: center;
+    }
+/* metrics */
+    .dailyFunctionCont{
+        flex-direction: column;
+    }
+/* login */
+    .dogImgCont{
+        align-items: center;
+    }
+
+}

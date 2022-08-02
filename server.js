@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PORT = 8000;
+const PORT =  process.env.PORT || 8000;
 //this variable lets you bring in the connection function from the db file
 const connectDB = require('./db');
 //used to validate user access via cookie token

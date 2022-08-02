@@ -179,7 +179,6 @@ exports.deleteMetric = async (req, res, next) => {
             }
             doc.save()
             res.redirect('/petinfosubmit')
-            next()
         })
         .catch((err) => {
             res.status(401).json({
